@@ -1,0 +1,20 @@
+{
+    "name": "davidb/projet-vente-en-ligne",
+    "description": "Un site de vente en ligne pour acheter des produits variés.",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Davidb\\ProjetVenteEnLigne\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "DavidBohorquez",
+            "email": "ndbohorquezg@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "symfony/var-dumper": "^5.0"
+    }
+}

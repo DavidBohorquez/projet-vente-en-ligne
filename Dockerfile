@@ -9,8 +9,20 @@ RUN apt-get update && apt-get install -y \
 # Activation de mod_rewrite pour Apache
 RUN a2enmod rewrite
 
-# Copie des fichiers PHP dans le conteneur
-COPY ./public /var/www/html
+# Copier tout le projet dans le conteneur
+COPY . /var/www
+
+# Définir le répertoire de travail
+WORKDIR /var/www
 
 # Fichier de configuration PHP personnalisé
 COPY ./php.ini /usr/local/etc/php/
+
+# Installer Composer
+COPY --from=composer:2.6 /usr/bin/composer /usr/local/bin/composer
+
+# Installer les dépendances PHP
+RUN composer install --no-dev --optimize-autoloader
+
+# Optionnel : Donner les bons droits aux fichiers
+RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
