@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-namespace App\Entity;
+namespace Davidb\ProjetVenteEnLigne\Entity;
 
 /**
  * Classe représentant un produit.
@@ -41,11 +41,11 @@ class Produit
         int $stock,
         ?int $id = null
     ) {
-        $this->id = $id;
         $this->nom = $nom;
         $this->description = $description;
         $this->prix = $prix;
         $this->stock = $stock;
+        $this->id = $id;
     }
 
     // Getters et setters
@@ -127,7 +127,7 @@ class Produit
      * @param int $quantite
      * @return bool
      */
-    public function verifierStock($int $quantite): bool
+    public function verifierStock(int $quantite): bool
     {
         return $this->stock >= $quantite; 
     }
