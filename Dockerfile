@@ -26,3 +26,19 @@ RUN composer install --no-dev --optimize-autoloader
 
 # Optionnel : Donner les bons droits aux fichiers
 RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
+
+# Installer MySQL client
+RUN apt-get update && apt-get install -y default-mysql-client
+
+# Copier le script SQL dans le conteneur
+COPY init.sql /var/www/init.sql
+
+# Copier le script d'entrée
+COPY entrypoint.sh /usr/local/bin/
+
+# Rendre le script d'entrée exécutable
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# Définir le script d'entrée
+ENTRYPOINT ["entrypoint.sh"]
+CMD ["apache2-foreground"]
