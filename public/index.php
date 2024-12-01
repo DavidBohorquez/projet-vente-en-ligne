@@ -13,6 +13,10 @@ use Davidb\ProjetVenteEnLigne\Entity\Utilisateur\Client;
 use Davidb\ProjetVenteEnLigne\Entity\Utilisateur\Admin;
 use Davidb\ProjetVenteEnLigne\Entity\Utilisateur\Vendeur;
 
+use Davidb\ProjetVenteEnLigne\Factory\ProduitFactory;
+
+use Davidb\ProjetVenteEnLigne\Config\ConfigurationManager;
+
 // Création de différents types de produits
 echo "<h2> Création de différents types de produits ...\n </h2>";
 
@@ -142,5 +146,84 @@ echo "<h3> Produits dans la catégorie Alimentation :\n </h3>";
 echo '<pre>'. $categorieAlimentation->toJson() . '<pre>';
 
 // Simulation d'une commande (vide pour l'instant)
-echo "<h3> \nPassage d'une commande pour le client ...\n <h3>";
+echo "<h3> \nPassage d'une commande pour le client ...\n </h3>";
 $client->passerCommande(); // Méthode à implémenter plus tard
+
+//------------------------------------------------------------
+
+echo "<h1>Design Pattern : Factory</h1>";
+
+try {
+    // Création d'un produit physique
+    $produitPhysique = ProduitFactory::creerProduit('physique', [
+        'nom' => 'Table en bois',
+        'description' => 'Table artisanale en chêne massif',
+        'prix' => 199.99,
+        'stock' => 10,
+        'poids' => 25.5,
+        'longueur' => 120.0,
+        'largeur' => 80.0,
+        'hauteur' => 75.0,
+    ]);
+    echo "<h3>Produit physique créé : </h3>" . json_encode($produitPhysique, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) . PHP_EOL;
+
+    // Création d'un produit numérique
+    $produitNumerique = ProduitFactory::creerProduit('numerique', [
+        'nom' => 'Logiciel Antivirus',
+        'description' => 'Protection complète pour votre ordinateur',
+        'prix' => 49.99,
+        'stock' => 100,
+        'lienTelechargement' => 'https://example.com/download',
+        'tailleFichier' => 1.2,
+        'formatFichier' => 'exe',
+    ]);
+    echo "<h3>Produit numérique créé : </h3>" . json_encode($produitNumerique, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) . PHP_EOL;
+
+    // Création d'un produit périssable
+    $produitPerissable = ProduitFactory::creerProduit('perissable', [
+        'nom' => 'Lait frais',
+        'description' => 'Lait entier pasteurisé',
+        'prix' => 1.49,
+        'stock' => 50,
+        'dateExpiration' => '2024-12-10',
+        'temperatureStockage' => 4.0,
+    ]);
+    echo "<h3>Produit périssable créé : </h3>" . json_encode($produitPerissable, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) . PHP_EOL;
+} catch (Exception $e) {
+    echo "Erreur : " . $e->getMessage() . PHP_EOL;
+}
+
+//============================================================
+
+echo "<h1>Design Pattern : Singleton    </h1>";
+
+// Récupération de l'instance unique
+$config = ConfigurationManager::getInstance();
+
+// Accès aux paramètres
+echo "TVA par défaut : " . $config->get('tva') . "%" . PHP_EOL;
+
+// Modification d'un paramètre
+$config->set('tva', 19.6);
+echo "Nouvelle TVA : " . $config->get('tva') . "%" . PHP_EOL;
+
+// Charger une configuration depuis un tableau
+$config->charger([
+    'devise' => 'USD',
+    'frais_livraison_base' => 7.5,
+]);
+echo "Devise : " . $config->get('devise') . PHP_EOL;
+echo "Frais de livraison : " . $config->get('frais_livraison_base') . "€" . PHP_EOL;
+
+$produit = new ProduitPhysique(
+    'Chaise',
+    'Chaise ergonomique',
+    50.0,
+    10,
+    5.0,
+    100.0,
+    50.0,
+    50.0
+);
+
+echo "<strong>Prix TTC :</strong>" . $produit->calculerPrixTTC() . " " . $config->get('devise') . PHP_EOL;

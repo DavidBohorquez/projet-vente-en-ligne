@@ -5,10 +5,12 @@ namespace Davidb\ProjetVenteEnLigne\Entity\Produit;
 
 use Davidb\ProjetVenteEnLigne\Entity\Produit\Produit;
 
+use JsonSerializable;
+
 /**
  * Classe représentant un produit physique.
  */
-class ProduitPhysique extends Produit
+class ProduitPhysique extends Produit implements JsonSerializable
 {
     /**
      * Poids du produit en kg.
@@ -55,6 +57,12 @@ class ProduitPhysique extends Produit
     public function afficherDetails(): string
     {
         return "Produit Physique: {$this->getNom()}, Volume: {$this->calculerVolume()} cm³, Poids: {$this->poids} kg}";
+    }
+
+    // Implémentation de JsonSerializable
+    public function jsonSerialize(): array
+    {
+        return $this->toArray();
     }
 
     // Redéfinition de toArray pour ajouter des propriétés spécifiques à ProduitPhysique

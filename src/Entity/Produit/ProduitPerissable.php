@@ -4,11 +4,12 @@ declare(strict_types=1);
 namespace Davidb\ProjetVenteEnLigne\Entity\Produit;
 
 use DateTime;
+use JsonSerializable;
 
 /**
  * Classe représentant un produit périssable.
  */
-class ProduitPerissable extends Produit
+class ProduitPerissable extends Produit implements JsonSerializable
 {
     /**
      * Date d'expiration.
@@ -49,6 +50,12 @@ class ProduitPerissable extends Produit
     public function afficherDetails(): string
     {
         return "Produit Périssable: {$this->getNom()}, Expire le: {$this->dateExpiration->format('Y-m-d')}";
+    }
+
+    // Implémentation de JsonSerializable
+    public function jsonSerialize(): array
+    {
+        return $this->toArray();
     }
 
     // Redéfinition de toArray pour ajouter des propriétés spécifiques à ProduitPerissable

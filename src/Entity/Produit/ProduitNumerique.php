@@ -3,10 +3,12 @@
 declare(strict_types=1);
 namespace Davidb\ProjetVenteEnLigne\Entity\Produit;
 
+use JsonSerializable;
+
 /**
  * Classe représentant un produit numérique.
  */
-class ProduitNumerique extends Produit
+class ProduitNumerique extends Produit implements JsonSerializable
 {
      /**
      * Lien de téléchargement.
@@ -54,6 +56,12 @@ class ProduitNumerique extends Produit
     public function afficherDetails(): string
     {
         return "Produit Numérique: {$this->getNom()}, Taille: {$this->tailleFichier} MB, Format: {$this->formatFichier}";
+    }
+
+    // Implémentation de JsonSerializable
+    public function jsonSerialize(): array
+    {
+        return $this->toArray();
     }
 
     // Redéfinition de toArray pour ajouter des propriétés spécifiques à ProduitNumerique

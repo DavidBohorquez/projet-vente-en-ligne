@@ -3,6 +3,8 @@
 declare(strict_types=1);
 namespace Davidb\ProjetVenteEnLigne\Entity\Produit;
 
+use \Davidb\ProjetVenteEnLigne\Config\ConfigurationManager;
+
 /**
  * Classe abstraite représentant un produit.
  */
@@ -117,8 +119,9 @@ abstract class Produit
      */
     public function calculerPrixTTC(): float
     {
-        $tva = 0.20; // TVA à 20%
-        return $this->prix * (1 + $tva);
+        $config = ConfigurationManager::getInstance();
+        $tva = $config->get('tva');
+        return $this->prix * (1 + $tva / 100);
     }
 
     /**
