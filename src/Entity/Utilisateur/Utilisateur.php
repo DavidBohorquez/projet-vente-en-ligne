@@ -1,12 +1,12 @@
 <?php
 
 declare(strict_types=1);
-namespace Davidb\ProjetVenteEnLigne\Entity;
+namespace Davidb\ProjetVenteEnLigne\Entity\Utilisateur;
 
 /**
- * Classe représentant un utilisateur.
+ * Classe abstraite représentant un utilisateur.
  */
-class Utilisateur
+abstract class Utilisateur
 {
     // Propriétés
 
@@ -16,13 +16,19 @@ class Utilisateur
      * @var string $nom.
      * @var string $email.
      * @var string $motDePasse.
-     * @var \DataTime $dataInscription.
+     * @var \DataTime $dateInscription.
      */
     private ?int $id;
     private string $nom;
     private string $email;
     private string $motDePasse;
-    private \DataTime $dataInscription;
+    private \DateTime $dateInscription;
+
+    /**
+     * Rôles de l'utilisateur.
+     * @var array
+     */
+    protected array $roles;
 
     /**
      * Constructeur de la classe Utilisateur.
@@ -31,19 +37,23 @@ class Utilisateur
      * @param string $nom Le nom de l'utilisateur.
      * @param string $email L'adresse email de l'utilisateur.
      * @param string $motDePasse Le mot de passe de l'utilisateur.
+     * @param array roles.
+     * @param \DateTime $dateIncription.
      * @throws \InvalidArgumentException Si les données ne respectent pas les règles de validation.
      */
     public function __construct(
         string $nom,
         string $email,
         string $motDePasse,
+        array $roles,
         ?int $id = null,
         ?\DateTime $dateInscription = null
     ) {
         $this->id = $id;
         $this->nom = $nom;
         $this->email = $email;
-        $this->motDePasse = password_hash($motDePasse, PASSWORD_BCRYPT);
+        $this->roles = $roles;
+        $this->setMotDePasse($motDePasse); //password_hash($motDePasse, PASSWORD_BCRYPT);
         $this->dateInscription = $dateInscription ?? new \DateTime();
     }
 
@@ -135,6 +145,16 @@ class Utilisateur
         $this->dateInscription = $dateInscription;
     }
 
+    public function getRoles(): array
+    {
+        return $this->roles;
+    }
+
+    public function setRoles(array $roles): void
+    {
+        $this->roles = $roles;
+    }
+
      // Méthodes
 
     /**
@@ -161,5 +181,28 @@ class Utilisateur
         $this->setNom($nom);
         $this->setEmail($email);
         $this->setMotDePasse($motDePasse);
+    }
+
+    /**
+     * Méthode abstraite pour afficher les rôles de l'utilisateur.
+     * 
+     * @return string
+     */
+    abstract public function afficherRoles(): string;
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'nom' => $this->nom,
+            'email' => $this->email,
+            'roles' => $this->roles,
+            'dateInscription' => $this->dateInscription ? $this->dateInscription->format('Y-m-d H:i:s') : null
+        ];
+    }
+
+    public function toJson(): string
+    {
+        return json_encode($this->toArray(), JSON_PRETTY_PRINT);
     }
 }

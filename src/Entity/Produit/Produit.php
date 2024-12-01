@@ -1,12 +1,12 @@
 <?php
 
 declare(strict_types=1);
-namespace Davidb\ProjetVenteEnLigne\Entity;
+namespace Davidb\ProjetVenteEnLigne\Entity\Produit;
 
 /**
- * Classe représentant un produit.
+ * Classe abstraite représentant un produit.
  */
-class Produit 
+abstract class Produit 
 {
     // Propriétés
     
@@ -131,4 +131,37 @@ class Produit
     {
         return $this->stock >= $quantite; 
     }
+
+    // Méthodes abstraites
+    /**
+     * Méthode abstraite pour calculer les frais de livraison.
+     * 
+     * @return float
+     */
+    abstract public function calculerFraisLivraison(): float;
+
+    /**
+     * Méthode abstraite pour afficher les détails du produit.
+     * 
+     * @return string
+     */
+    abstract public function afficherDetails(): string;
+
+    // Méthode pour convertir l'objet en tableau
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'nom' => $this->nom,
+            'description' => $this->description,
+            'prix' => $this->prix,
+            'stock' => $this->stock
+        ];
+    }
+
+     // Méthode pour obtenir l'objet en format JSON
+     public function toJson(): string
+     {
+         return json_encode($this->toArray(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+     }
 }
